@@ -35,6 +35,8 @@ See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rule
 
 `src/components/DropdownNav.tsx`
 
+Live demo: **[ngen-design.vercel.app/chevron-nav](https://ngen-design.vercel.app/chevron-nav)** — use the 0.1x / 0.5x buttons in the bottom-left corner to slow every animation on the page down and see exactly what's happening.
+
 **Panel open / close**
 
 | Parameter | Open | Close |
