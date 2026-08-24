@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FocusEvent, type KeyboardEvent, type ReactNode } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion, type Transition } from "motion/react";
 import NavLink from "./NavLink";
+import { useAnimationSpeed } from "../context/AnimationSpeedContext";
 
 type DropdownNavItem = {
   text?: string;
@@ -12,12 +13,17 @@ type DropdownNavProps = {
   items: DropdownNavItem[];
 };
 
-const BACKDROP_TRANSITION = { duration: 0.15, ease: "easeOut" } as const;
+// Base durations (seconds) — divided by the animation-speed multiplier at
+// render time, so a page can slow every transition below down uniformly
+// (see AnimationSpeedContext) without changing the easing/distance tokens.
+const BACKDROP_DURATION = 0.15;
+const BACKDROP_EASE = "easeOut" as const;
 // transitions-dev "menu dropdown" tokens: the panel grows from its trigger
 // with an asymmetric open/close (slower, eased-out open; quicker close) and
 // a subtle scale instead of a slide, so it reads as anchored to the nav.
-const DROPDOWN_OPEN_TRANSITION = { duration: 0.25, ease: [0.22, 1, 0.36, 1] } as const;
-const DROPDOWN_CLOSE_TRANSITION = { duration: 0.15, ease: [0.22, 1, 0.36, 1] } as const;
+const DROPDOWN_OPEN_DURATION = 0.25;
+const DROPDOWN_CLOSE_DURATION = 0.15;
+const DROPDOWN_EASE = [0.22, 1, 0.36, 1] as const;
 const DROPDOWN_PRE_SCALE = 0.97;
 const DROPDOWN_CLOSING_SCALE = 0.99;
 const DROPDOWN_Y_OFFSET = 10;
@@ -28,11 +34,12 @@ const DROPDOWN_Y_OFFSET = 10;
 // default 150ms/8px so back-to-back trigger switches don't feel sluggish).
 const CONTENT_SWAP_TRANSLATE_X = 32;
 const CONTENT_SWAP_BLUR = "blur(4px)";
-const CONTENT_SWAP_TRANSITION = { duration: 0.14, ease: "easeInOut" } as const;
+const CONTENT_SWAP_DURATION = 0.14;
+const CONTENT_SWAP_EASE = "easeInOut" as const;
 // How much the entering content's animation overlaps the exiting content's.
 // 0 = enter starts the instant exit starts (full overlap, current behavior).
 // A positive value (seconds) delays the enter so less of the two overlaps;
-// set it >= CONTENT_SWAP_TRANSITION.duration for no overlap at all (sequential).
+// set it >= the content-swap duration for no overlap at all (sequential).
 const CONTENT_SWAP_ENTER_DELAY = 0;
 
 type ContentSwapCustom = { direction: number; reducedMotion: boolean };
@@ -40,24 +47,26 @@ type ContentSwapCustom = { direction: number; reducedMotion: boolean };
 // direction: 1 when the cursor moved to a trigger further right, -1 for further left.
 // reducedMotion drops the slide + blur but keeps the opacity crossfade, so
 // the content swap still reads as a change without the position movement.
-const contentSwapVariants = {
-  enter: ({ direction, reducedMotion }: ContentSwapCustom) => ({
-    opacity: 0,
-    x: reducedMotion ? 0 : direction * CONTENT_SWAP_TRANSLATE_X,
-    filter: reducedMotion ? "blur(0px)" : CONTENT_SWAP_BLUR,
-  }),
-  center: {
-    opacity: 1,
-    x: 0,
-    filter: "blur(0px)",
-    transition: { ...CONTENT_SWAP_TRANSITION, delay: CONTENT_SWAP_ENTER_DELAY },
-  },
-  exit: ({ direction, reducedMotion }: ContentSwapCustom) => ({
-    opacity: 0,
-    x: reducedMotion ? 0 : -direction * CONTENT_SWAP_TRANSLATE_X,
-    filter: reducedMotion ? "blur(0px)" : CONTENT_SWAP_BLUR,
-  }),
-};
+function getContentSwapVariants(transition: Transition) {
+  return {
+    enter: ({ direction, reducedMotion }: ContentSwapCustom) => ({
+      opacity: 0,
+      x: reducedMotion ? 0 : direction * CONTENT_SWAP_TRANSLATE_X,
+      filter: reducedMotion ? "blur(0px)" : CONTENT_SWAP_BLUR,
+    }),
+    center: {
+      opacity: 1,
+      x: 0,
+      filter: "blur(0px)",
+      transition: { ...transition, delay: CONTENT_SWAP_ENTER_DELAY },
+    },
+    exit: ({ direction, reducedMotion }: ContentSwapCustom) => ({
+      opacity: 0,
+      x: reducedMotion ? 0 : -direction * CONTENT_SWAP_TRANSLATE_X,
+      filter: reducedMotion ? "blur(0px)" : CONTENT_SWAP_BLUR,
+    }),
+  };
+}
 // Grace period before closing on mouseleave, so a quick pass over the gap
 // between trigger and panel doesn't flicker it shut.
 const CLOSE_DELAY_MS = 100;
@@ -71,6 +80,15 @@ export default function DropdownNav({ items }: DropdownNavProps) {
   const [direction, setDirection] = useState(1);
   const closeTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const prefersReducedMotion = useReducedMotion() ?? false;
+  // A page can slow every animation below down uniformly via
+  // AnimationSpeedContext (defaults to 1, i.e. unaffected) — dividing each
+  // base duration by it is what makes 0.5x/0.1x take 2x/10x as long.
+  const speed = useAnimationSpeed();
+  const backdropTransition: Transition = { duration: BACKDROP_DURATION / speed, ease: BACKDROP_EASE };
+  const dropdownOpenTransition: Transition = { duration: DROPDOWN_OPEN_DURATION / speed, ease: DROPDOWN_EASE };
+  const dropdownCloseTransition: Transition = { duration: DROPDOWN_CLOSE_DURATION / speed, ease: DROPDOWN_EASE };
+  const contentSwapTransition: Transition = { duration: CONTENT_SWAP_DURATION / speed, ease: CONTENT_SWAP_EASE };
+  const contentSwapVariants = getContentSwapVariants(contentSwapTransition);
 
   const cancelClose = () => clearTimeout(closeTimeout.current);
 
@@ -150,7 +168,7 @@ export default function DropdownNav({ items }: DropdownNavProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={BACKDROP_TRANSITION}
+            transition={backdropTransition}
           />
         )}
       </AnimatePresence>
@@ -180,14 +198,14 @@ export default function DropdownNav({ items }: DropdownNavProps) {
               x: "-50%",
               scale: 1,
               y: 0,
-              transition: DROPDOWN_OPEN_TRANSITION,
+              transition: dropdownOpenTransition,
             }}
             exit={{
               opacity: 0,
               x: "-50%",
               scale: prefersReducedMotion ? 1 : DROPDOWN_CLOSING_SCALE,
               y: prefersReducedMotion ? 0 : -DROPDOWN_Y_OFFSET,
-              transition: DROPDOWN_CLOSE_TRANSITION,
+              transition: dropdownCloseTransition,
             }}
           >
             {/* default (sync) mode lets the exiting and entering content overlap:
@@ -206,7 +224,7 @@ export default function DropdownNav({ items }: DropdownNavProps) {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={CONTENT_SWAP_TRANSITION}
+                transition={contentSwapTransition}
               >
                 {active.content}
               </motion.div>

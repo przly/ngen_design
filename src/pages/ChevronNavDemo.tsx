@@ -1,5 +1,45 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import DropdownNav from "../components/DropdownNav";
+import { AnimationSpeedContext } from "../context/AnimationSpeedContext";
+
+// Debug control for reviewing the nav's motion frame-by-frame — not a
+// product feature. 1 (unselected) is normal speed.
+const SPEED_OPTIONS = [0.5, 0.1] as const;
+
+function SpeedControl({
+  speed,
+  onChange,
+}: {
+  speed: number;
+  onChange: (speed: number) => void;
+}) {
+  return (
+    <div
+      className="fixed bottom-4 left-4 z-[60] flex gap-1 rounded-full border border-[var(--ngen-grayscale-50)] bg-white p-1 shadow-sm"
+      role="group"
+      aria-label="Animation speed"
+    >
+      {SPEED_OPTIONS.map((option) => {
+        const isActive = speed === option;
+        return (
+          <button
+            key={option}
+            type="button"
+            onClick={() => onChange(isActive ? 1 : option)}
+            aria-pressed={isActive}
+            className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+              isActive
+                ? "bg-[var(--ngen-grayscale-900)] text-white"
+                : "text-[var(--ngen-grayscale-500)] hover:bg-[var(--ngen-grayscale-50)]"
+            }`}
+          >
+            {option}x
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 
 function RectMenu() {
   return (
@@ -87,14 +127,19 @@ function ExploreDropdown() {
 }
 
 export default function ChevronNavDemo() {
+  const [speed, setSpeed] = useState(1);
+
   return (
-    <div className="flex min-h-screen w-full items-start justify-center bg-white pt-[10px]">
-      <DropdownNav
-        items={[
-          { text: "Button", href: "#", content: <RectMenu /> },
-          { text: "Button", href: "#", content: <ExploreDropdown /> },
-        ]}
-      />
-    </div>
+    <AnimationSpeedContext.Provider value={speed}>
+      <div className="flex min-h-screen w-full items-start justify-center bg-white pt-[10px]">
+        <DropdownNav
+          items={[
+            { text: "Button", href: "#", content: <RectMenu /> },
+            { text: "Button", href: "#", content: <ExploreDropdown /> },
+          ]}
+        />
+      </div>
+      <SpeedControl speed={speed} onChange={setSpeed} />
+    </AnimationSpeedContext.Provider>
   );
 }

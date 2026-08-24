@@ -1,5 +1,6 @@
 import { useEffect, useRef, type MouseEvent, type Ref } from "react";
 import { motion, useMotionValue, useReducedMotion, animate, type Transition } from "motion/react";
+import { useAnimationSpeed } from "../context/AnimationSpeedContext";
 
 type NavLinkVariant = "default" | "dropdown";
 type Side = "left" | "right";
@@ -26,15 +27,16 @@ const SLOW_MOTION_FACTOR = 10;
 // Matches the Figma prototype interaction: Smart Animate, "Slow" spring, 120ms.
 const BASE_HOVER_DURATION = 0.12;
 
-function getHoverSpring(slowMotion: boolean, reducedMotion: boolean): Transition {
+function getHoverSpring(slowMotion: boolean, reducedMotion: boolean, speedMultiplier: number): Transition {
   // Reduced motion keeps the hover feedback (it aids comprehension of which
   // link is active) but drops the slide — the pill just snaps into place.
   if (reducedMotion) return { duration: 0 };
+  const baseDuration = slowMotion
+    ? BASE_HOVER_DURATION * SLOW_MOTION_FACTOR
+    : BASE_HOVER_DURATION;
   return {
     type: "spring",
-    duration: slowMotion
-      ? BASE_HOVER_DURATION * SLOW_MOTION_FACTOR
-      : BASE_HOVER_DURATION,
+    duration: baseDuration / speedMultiplier,
     bounce: 0,
   };
 }
@@ -66,6 +68,7 @@ export default function NavLink({
   const pillX = useMotionValue(-INITIAL_OFFSCREEN);
   const chevronRotate = useMotionValue(0);
   const prefersReducedMotion = useReducedMotion() ?? false;
+  const speed = useAnimationSpeed();
   const isDropdown = variant === "dropdown";
   const sharedClassName = `relative isolate flex items-center justify-center gap-1.5 overflow-hidden rounded-full py-3 ${
     isDropdown ? "pl-5 pr-4" : "px-5"
@@ -84,7 +87,7 @@ export default function NavLink({
     const enteredFrom = cursorSide(event.clientX, rect);
     isHoveringRef.current = true;
     lastSideRef.current = enteredFrom;
-    const spring = getHoverSpring(slowMotion, prefersReducedMotion);
+    const spring = getHoverSpring(slowMotion, prefersReducedMotion, speed);
     // MotionValue.set() applies synchronously, so the spring below always
     // starts from exactly where the cursor entered — no race with a
     // previous animation, no dependency on the pill's prior resting side.
@@ -102,7 +105,7 @@ export default function NavLink({
     // from it) — keep the trigger's opened treatment; the isOpen effect
     // below closes it once the panel itself actually closes.
     if (isDropdown && isOpen) return;
-    const spring = getHoverSpring(slowMotion, prefersReducedMotion);
+    const spring = getHoverSpring(slowMotion, prefersReducedMotion, speed);
     animate(pillX, exitedTo === "left" ? -rect.width : rect.width, spring);
     if (isDropdown) animate(chevronRotate, 0, spring);
   };
@@ -117,7 +120,7 @@ export default function NavLink({
       isFirstRenderRef.current = false;
       return;
     }
-    const spring = getHoverSpring(slowMotion, prefersReducedMotion);
+    const spring = getHoverSpring(slowMotion, prefersReducedMotion, speed);
     if (isOpen) {
       animate(pillX, 0, spring);
       animate(chevronRotate, 180, spring);
