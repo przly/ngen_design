@@ -57,11 +57,15 @@ Switching triggers while the panel is already open doesn't close and reopen it �
 
 *Implementation:* the inner `AnimatePresence` keeps its default `mode="sync"` (not `"wait"`), so the outgoing and incoming content — swapped via `key={activeIndex}` — animate at the same time instead of enter waiting for exit.
 
+**Overlap by `CONTENT_SWAP_ENTER_DELAY`**
+
 | `CONTENT_SWAP_ENTER_DELAY` | Overlap |
 | --- | --- |
 | `0` (current) | Full — enter starts the instant exit starts |
 | `> 0`, `< duration` | Partial |
 | `≥ duration` | None — fully sequential |
+
+**Content swap parameters**
 
 | Parameter | Value |
 | --- | --- |
