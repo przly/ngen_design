@@ -53,6 +53,14 @@ Switching triggers while the panel is already open doesn't close and reopen it �
 - **Exit and enter overlap** (`CONTENT_SWAP_ENTER_DELAY = 0`): the entering content starts animating in the instant the exiting content starts animating out, rather than waiting for the exit to finish. This is what keeps rapid back-to-back trigger switches feeling responsive instead of sluggish.
 - **Reduced motion** drops the slide and blur but keeps the opacity crossfade, so the change still reads as a change without any position movement.
 
+*Implementation:* the inner `AnimatePresence` keeps its default `mode="sync"` (not `"wait"`), so the outgoing and incoming content — swapped via `key={activeIndex}` — animate at the same time instead of enter waiting for exit.
+
+| `CONTENT_SWAP_ENTER_DELAY` | Overlap |
+| --- | --- |
+| `0` (current) | Full — enter starts the instant exit starts |
+| `> 0`, `< duration` | Partial |
+| `≥ duration` | None — fully sequential |
+
 | Parameter | Value |
 | --- | --- |
 | Duration | 140ms |
