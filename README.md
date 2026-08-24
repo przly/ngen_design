@@ -30,3 +30,27 @@ If you are developing a production application, we recommend enabling type-aware
 ```
 
 See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+
+## Dropdown nav animation parameters
+
+`src/components/DropdownNav.tsx`
+
+**Panel open / close**
+
+| Parameter | Open | Close |
+| --- | --- | --- |
+| Duration | 250ms | 150ms |
+| Easing | `cubic-bezier(0.22, 1, 0.36, 1)` | `cubic-bezier(0.22, 1, 0.36, 1)` |
+| Scale | 0.97 → 1 | 1 → 0.99 |
+| Y offset | -10px → 0 | 0 → -10px |
+| Opacity | 0 → 1 | 1 → 0 |
+
+**Content swap** (when hovering between triggers while a dropdown is open)
+
+| Parameter | Value |
+| --- | --- |
+| Duration | 140ms |
+| Easing | `ease-in-out` |
+| Translate X | 32px (direction-aware: exiting content moves toward the side the cursor came from, entering content moves in from the opposite side) |
+| Blur | 4px |
+| Opacity | 0 → 1 |
