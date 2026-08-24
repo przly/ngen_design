@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+:root {
+  --ngen-grayscale-50: #f4f6f7;
+  --ngen-grayscale-100: #e6eaed;
+  --ngen-grayscale-500: #7c868e;
+  --ngen-grayscale-900: #041c2c;
+
+  --modal-open-dur: 250ms;
+  --modal-close-dur: 150ms;
+  --modal-scale: 0.96;
+  --modal-scale-close: 0.96;
+  --modal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --toast-open: 350ms;
+  --toast-close: 250ms;
+  --toast-distance: 16px;
+  --toast-blur: 2px;
+  --toast-scale: 0.97;
+  --toast-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.t-modal {
+  transform-origin: center;
+  transform: scale(var(--modal-scale));
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform var(--modal-open-dur) var(--modal-ease),
+    opacity var(--modal-open-dur) var(--modal-ease);
+  will-change: transform, opacity;
+}
+.t-modal.is-open {
+  transform: scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+.t-modal.is-closing {
+  transform: scale(var(--modal-scale-close));
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform var(--modal-close-dur) var(--modal-ease),
+    opacity var(--modal-close-dur) var(--modal-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-modal {
+    transition: none !important;
+  }
+}
+
+.t-toast {
+  opacity: 0;
+  transform: translateY(var(--toast-distance)) scale(var(--toast-scale));
+  filter: blur(var(--toast-blur));
+  will-change: transform, opacity, filter;
+  transition:
+    opacity var(--toast-close) var(--toast-ease),
+    transform var(--toast-close) var(--toast-ease),
+    filter var(--toast-close) var(--toast-ease);
+}
+.t-toast.is-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+  transition:
+    opacity var(--toast-open) var(--toast-ease),
+    transform var(--toast-open) var(--toast-ease),
+    filter var(--toast-open) var(--toast-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-toast {
+    transition: none !important;
+  }
+}
+
+/* Mirrors .t-modal's open/close timing so the backdrop and the panel
+   never desync (backdrop used to fade in over a flat 150ms while the
+   panel scaled up over 250ms). */
+.t-modal-backdrop {
+  opacity: 0;
+  transition: opacity var(--modal-open-dur) var(--modal-ease);
+}
+.t-modal-backdrop.is-open {
+  opacity: 1;
+  transition: opacity var(--modal-open-dur) var(--modal-ease);
+}
+.t-modal-backdrop.is-closing {
+  opacity: 0;
+  transition: opacity var(--modal-close-dur) var(--modal-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-modal-backdrop {
+    transition: none !important;
+  }
+}
+
+/* transitions-dev accordion panel (21-accordion.md), panel + panel-inner
+   only (no chevron here) — grid-template-rows 0fr -> 1fr gives a clean
+   height reveal with no JS measuring and no scaleY text distortion. */
+:root {
+  --acc-expand: 250ms;
+  --acc-collapse: 250ms;
+  --acc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+.t-acc-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--acc-collapse) var(--acc-ease);
+}
+.t-acc[data-open="true"] .t-acc-panel {
+  grid-template-rows: 1fr;
+  transition: grid-template-rows var(--acc-expand) var(--acc-ease);
+}
+.t-acc-panel-inner {
+  overflow: hidden;
+  opacity: 0;
+  filter: blur(2px);
+  transition:
+    opacity var(--acc-collapse) var(--acc-ease),
+    filter var(--acc-collapse) var(--acc-ease);
+}
+.t-acc[data-open="true"] .t-acc-panel-inner {
+  opacity: 1;
+  filter: blur(0);
+  transition:
+    opacity var(--acc-expand) var(--acc-ease),
+    filter var(--acc-expand) var(--acc-ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-acc-panel,
+  .t-acc-panel-inner {
+    transition: none !important;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+}
+
+.icon-symbol {
+  font-family: "Material Symbols Sharp";
+  font-weight: normal;
+  font-style: normal;
+  font-variation-settings: "FILL" 0, "GRAD" 0;
+}
+
+.eyebrow {
+  font-family: "Geist Mono", monospace;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: -0.24px;
+}
