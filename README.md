@@ -47,6 +47,15 @@ Live demo: **[ngen-design.vercel.app/chevron-nav](https://ngen-design.vercel.app
 | Y offset | -10px → 0 | 0 → -10px |
 | Opacity | 0 → 1 | 1 → 0 |
 
+**Behavior notes**
+
+- Trigger stays visually "open" (`isOpen` prop) for as long as its panel is open, even after the cursor leaves the button.
+- Close waits 100ms after mouseleave before starting (`CLOSE_DELAY_MS`), so a quick pass over the trigger→panel gap doesn't flicker it shut.
+- Backdrop (`bg-black/25`) fades independently: 150ms, `easeOut`, opacity only.
+- Reduced motion drops scale/y on open/close too, leaving an opacity-only fade.
+- Keyboard: focus opens it, Escape or focus leaving the group closes it. Each trigger wires `aria-expanded`/`aria-haspopup`/`aria-controls`.
+- Centering uses Motion's `x: "-50%"`, not a Tailwind transform class — Motion overwrites the element's whole inline `transform`, so a class-based transform would just get discarded.
+
 **Content swap** (when hovering between triggers while a dropdown is open)
 
 Switching triggers while the panel is already open doesn't close and reopen it — the panel stays put and only its inner content is replaced, so the swap reads as one continuous surface rather than a flicker.
