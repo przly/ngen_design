@@ -47,6 +47,12 @@ See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rule
 
 **Content swap** (when hovering between triggers while a dropdown is open)
 
+Switching triggers while the panel is already open doesn't close and reopen it — the panel stays put and only its inner content is replaced, so the swap reads as one continuous surface rather than a flicker.
+
+- **Direction is derived from trigger order**, not raw cursor position: moving to a trigger further right sets direction `1`, further left sets `-1`. The exiting content slides out toward the side the cursor came *from*, and the entering content slides in from the opposite side — so the motion always points the way the cursor is travelling.
+- **Exit and enter overlap** (`CONTENT_SWAP_ENTER_DELAY = 0`): the entering content starts animating in the instant the exiting content starts animating out, rather than waiting for the exit to finish. This is what keeps rapid back-to-back trigger switches feeling responsive instead of sluggish.
+- **Reduced motion** drops the slide and blur but keeps the opacity crossfade, so the change still reads as a change without any position movement.
+
 | Parameter | Value |
 | --- | --- |
 | Duration | 140ms |
