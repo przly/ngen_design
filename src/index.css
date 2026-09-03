@@ -6,6 +6,9 @@
   --ngen-grayscale-500: #7c868e;
   --ngen-grayscale-900: #041c2c;
 
+  --ngen-green-400: #82e472;
+  --ngen-green-600: #44d62c;
+
   --modal-open-dur: 250ms;
   --modal-close-dur: 150ms;
   --modal-scale: 0.96;
@@ -135,6 +138,31 @@
   .t-acc-panel,
   .t-acc-panel-inner {
     transition: none !important;
+  }
+}
+
+/* Hero progress bar fill — duration must match STEP_DURATION_MS in
+   HeroCards.tsx so the fill lands exactly as the active card advances. */
+:root {
+  --hero-progress-dur: 4000ms;
+}
+@keyframes hero-progress-fill {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+.t-hero-progress {
+  width: 0%;
+  animation: hero-progress-fill var(--hero-progress-dur) linear forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-hero-progress {
+    animation: none;
+    width: 100%;
   }
 }
 
