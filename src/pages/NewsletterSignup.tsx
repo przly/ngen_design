@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { motion } from "motion/react";
+import DemoInfoTooltip from "../components/DemoInfoTooltip";
 
 // Figma prototype spring for the input border color transition
 // (Smart animate, mass 1 / stiffness 720 / damping 60).
@@ -16,6 +17,7 @@ export default function NewsletterSignup() {
 
   return (
     <div className="flex min-h-screen w-full items-start justify-center bg-[var(--ngen-grayscale-900)] pt-[30vh]">
+      <DemoInfoTooltip />
       <form onSubmit={handleSubmit} className="flex w-[484px] flex-col items-start">
         <label htmlFor="newsletter-email" className="mb-1 text-xs leading-[1.5] text-white/50">
           Your E-mail

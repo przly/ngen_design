@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react";
 import DropdownNav from "../components/DropdownNav";
+import DemoInfoTooltip from "../components/DemoInfoTooltip";
 import { AnimationSpeedContext } from "../context/AnimationSpeedContext";
 
 // Debug control for reviewing the nav's motion frame-by-frame — not a
@@ -131,6 +132,7 @@ export default function ChevronNavDemo() {
 
   return (
     <AnimationSpeedContext.Provider value={speed}>
+      <DemoInfoTooltip />
       <div className="flex min-h-screen w-full items-start justify-center bg-white pt-[10px]">
         <DropdownNav
           items={[

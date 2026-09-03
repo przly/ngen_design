@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Modal from "../components/Modal";
+import DemoInfoTooltip from "../components/DemoInfoTooltip";
 
 // Fallback only — the real value is read from --toast-close at dismiss
 // time, so a change to the CSS token can't silently desync from this timer.
@@ -22,6 +23,7 @@ export default function ModalDemo() {
 
   return (
     <div className="min-h-screen w-full bg-white">
+      <DemoInfoTooltip />
       {cardMounted && (
         <div
           className={`t-toast fixed bottom-6 right-6 flex w-64 flex-col gap-3 rounded-2xl border border-[var(--ngen-grayscale-50)] bg-white p-4 shadow-xl ${

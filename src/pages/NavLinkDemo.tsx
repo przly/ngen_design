@@ -1,11 +1,13 @@
 import { useState } from "react";
 import NavLink from "../components/NavLink";
+import DemoInfoTooltip from "../components/DemoInfoTooltip";
 
 export default function NavLinkDemo() {
   const [slowMotion, setSlowMotion] = useState(false);
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center gap-8 bg-white">
+      <DemoInfoTooltip />
       <div className="flex items-center gap-5">
         <NavLink text="Button" variant="default" href="#" slowMotion={slowMotion} />
         <NavLink text="Button" variant="dropdown" href="#" slowMotion={slowMotion} />
