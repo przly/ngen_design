@@ -1,0 +1,72 @@
+/* Stagger engine — CSS half.
+   Pairs with stagger-engine.js. No build step, no dependencies —
+   drop both files into any static or framework front end.
+
+   Apply .stagger-group to the container, .stagger-item to each element
+   that should animate in (optionally .stagger-item--pop for extra scale
+   on top). The JS never touches these properties directly — it only
+   ever flips the container's data-open attribute and sets each item's
+   --stagger-index. Every visual decision (duration, easing, delay step,
+   what "in" looks like) lives here, so a team can retune the feel
+   without touching the JS at all. */
+
+:root {
+  --stagger-dur: 120ms;
+  --stagger-step: 30ms;
+  --stagger-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.stagger-group {
+  transform-origin: top;
+  transform: scale(0.98);
+  transition: transform var(--stagger-dur) var(--stagger-ease);
+  will-change: transform;
+}
+.stagger-group[data-open="true"] {
+  transform: scale(1);
+}
+
+.stagger-item {
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity var(--stagger-dur) var(--stagger-ease),
+    transform var(--stagger-dur) var(--stagger-ease);
+  will-change: transform, opacity;
+}
+/* transition-delay lives ONLY on the [data-open="true"] rule, not on the
+   base .stagger-item rule above — so it applies while opening, but reverts
+   to the default (0s) the instant data-open goes back to "false". That's
+   what makes closing fade everything out together, uniformly, with no
+   reverse stagger, while opening still staggers by --stagger-index. */
+.stagger-group[data-open="true"] .stagger-item {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: calc(var(--stagger-index, 0) * var(--stagger-step));
+}
+
+/* Optional: items that should also pop in from a slight scale, not just
+   fade + rise. transform holds both functions together so this cleanly
+   overrides .stagger-item's own transform for elements carrying both
+   classes — same longhand property, later rule in the cascade wins. */
+.stagger-item--pop {
+  transform: translateY(6px) scale(0.97);
+}
+.stagger-group[data-open="true"] .stagger-item--pop {
+  transform: translateY(0) scale(1);
+}
+
+/* Reduced motion means gentler, not zero: keep a short opacity crossfade
+   (it carries real information — something just appeared), drop the
+   movement (translateY, scale) and the stagger delay entirely. */
+@media (prefers-reduced-motion: reduce) {
+  .stagger-group {
+    transition: none !important;
+    transform: none !important;
+  }
+  .stagger-item {
+    transition: opacity var(--stagger-dur) ease !important;
+    transform: none !important;
+    transition-delay: 0ms !important;
+  }
+}
