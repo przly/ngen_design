@@ -5,6 +5,7 @@ import ChevronNavDemo from "./pages/ChevronNavDemo";
 import NewsletterSignup from "./pages/NewsletterSignup";
 import ModalDemo from "./pages/ModalDemo";
 import HeroCardsDemo from "./pages/HeroCardsDemo";
+import ContactFormDemo from "./pages/ContactFormDemo";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Route path="/newsletter-signup" element={<NewsletterSignup />} />
       <Route path="/modal-demo" element={<ModalDemo />} />
       <Route path="/hero-cards" element={<HeroCardsDemo />} />
+      <Route path="/contact-form" element={<ContactFormDemo />} />
     </Routes>
   );
 }

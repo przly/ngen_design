@@ -13,4 +13,5 @@ export const DEMO_ROUTES: DemoRoute[] = [
   { path: "/newsletter-signup", label: "Newsletter signup" },
   { path: "/modal-demo", label: "Modal" },
   { path: "/hero-cards", label: "Hero cards" },
+  { path: "/contact-form", label: "Contact form" },
 ];

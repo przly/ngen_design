@@ -141,6 +141,158 @@
   }
 }
 
+/* Scoped override, not a change to the shared --acc-expand token: makes
+   ContactForm's topic accordion open its shell (grid-template-rows +
+   opacity + blur, above) close to instant, so first appear reads like a
+   later type switch — in both cases the container is essentially already
+   at full size and the only real motion is the .t-stagger-group/
+   .t-stagger-item content reveal below (switching never touches the
+   shell's transition at all; it stays fully open throughout). Only
+   --acc-expand (opening) is touched — --acc-collapse (closing) is
+   untouched, so deselecting a type still collapses over its normal 250ms.
+
+   This was 1ms originally, and mostly that's fine — but 1ms turned an
+   ordinary browser quirk into a visible glitch: opacity is compositor-
+   only and retargets in one frame, while grid-template-rows is a layout
+   property that needs an extra pass to retarget, so the two properties
+   don't necessarily land in the same frame when a transition is
+   INTERRUPTED (not on a clean start — a clean open/switch showed no
+   issue). Closing a type and immediately reopening the SAME type — before
+   the 250ms collapse finishes — retargets the shell mid-flight, and at
+   1ms that one-frame lag was the entire transition: opacity would hit
+   1 (fully visible) while height was still stuck at ~25% of its target
+   (measured live), i.e. fully-opaque content squished into a quarter of
+   its box for a frame. 60ms doesn't eliminate the lag (still layout vs.
+   compositor timing, a browser-level asymmetry), it just makes it a small
+   fraction of a longer transition instead of the whole thing — confirmed
+   over repeated trials in a real browser: the two now track closely
+   together, with at most a minor gap that converges within another frame,
+   never the full-opacity/quarter-height mismatch 1ms produced every time.
+   Traded a little of the "first open is imperceptibly instant" goal
+   for this — 60ms is still far faster than the original 250ms open. */
+.t-acc--instant-open {
+  --acc-expand: 60ms;
+}
+
+/* Entrance stagger for content inside a .t-acc panel — opacity only, so it
+   layers on top of a button's own transition-transform (press feedback)
+   without a transition-property cascade conflict.
+
+   Driven by .t-stagger-group's OWN data-open, not .t-acc's — .t-acc's
+   data-open only changes value when the section as a whole opens or
+   closes, so a selector keyed off it can't replay when the topic *content*
+   changes while the section stays open (switching directly from one type
+   to another). .t-stagger-group's data-open is reset to false and flipped
+   back to true (two rAFs later — see the useLayoutEffect in
+   ContactForm.tsx; a single rAF didn't reliably survive a real paint,
+   which is what made this flaky) every time a type is newly selected —
+   on first open AND on every later switch — which is what makes both
+   cases trigger a real transition instead of new nodes just appearing at
+   their final opacity. On close it isn't reset, so items fade out
+   together, uniformly, with no reverse stagger — matching the shell's
+   own close behavior.
+
+   Grouped by row, not by item: the title/hint row goes first (default,
+   undelayed), then each row of a 3-column button grid follows as one
+   group — :nth-child(-n+3) is "first 3 children" (row 1), :nth-child(n+4)
+   is "4th child on" (row 2+). Scoped under [aria-label="Topic"] specifically
+   so this row-grouping only applies to that button grid's own children,
+   not to the unrelated title row (also a .t-stagger-item, one level up)
+   which would otherwise collide with the same :nth-child(-n+3) match.
+
+   Delays are short (20ms / 50ms) rather than the ~60ms / 120ms this
+   started at: switching types (see ContactForm.tsx's per-type topic
+   lists) unmounts the old, fully-visible topic buttons and mounts new
+   ones at opacity 0 in the very same synchronous tick — there's no CSS
+   exit animation for the outgoing content, so whatever gap exists before
+   the new content starts fading in reads as "everything just vanished
+   and nothing is happening" rather than as part of one motion. Longer
+   delays made that gap obvious enough to read as lag on every switch
+   after the first (which has no prior visible content to lose, so the
+   same gap felt fine there). Kept above ~30ms apart so row 1 vs row 2
+   still reads as sequential rather than simultaneous (established by
+   feel-testing earlier — below that a stagger stops being perceptible).
+   No bounce/overshoot: this is a click-triggered reveal with no
+   preceding gesture or momentum to carry.
+
+   Materialize, don't just fade (apple-design §12): opacity alone reads as
+   content simply appearing, not arriving. .t-stagger-item pairs opacity
+   with a small translateY(6px) settle, and .t-stagger-group (the whole
+   title+grid block) scales in from 0.98, anchored to its top edge
+   (transform-origin: top) since it's revealing below the type row above
+   it, not floating in from a specific point — growing from that shared
+   edge reads as "emerging from what's above" rather than "appearing out
+   of nowhere". Both stay well inside Apple's 0.9–0.97-ish subtle range
+   (never scale(0)) and use the same no-bounce curve as everything else
+   here, for the same reason: no gesture precedes this, so nothing should
+   overshoot.
+
+   will-change on both, matching .t-modal/.t-toast above: every topic
+   button is a brand-new DOM node on each switch (ContactForm.tsx keys
+   them by "<type>-<topic>" so a label persisting across two types still
+   replays instead of looking static), so there's no reused, already-
+   promoted compositing layer to animate on the transform/opacity change
+   the way a stable element would have — the browser has to do that layer
+   promotion from scratch on every single switch instead of once. Hinting
+   it upfront is what made repeated switches match the first open's
+   smoothness instead of occasionally dropping frames doing that
+   promotion mid-animation. */
+.t-stagger-group {
+  transform-origin: top;
+  transform: scale(0.98);
+  transition: transform 120ms var(--acc-ease);
+  will-change: transform;
+}
+.t-stagger-group[data-open="true"] {
+  transform: scale(1);
+}
+.t-stagger-item {
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 120ms var(--acc-ease),
+    transform 120ms var(--acc-ease);
+  will-change: transform, opacity;
+}
+.t-stagger-group[data-open="true"] .t-stagger-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+.t-stagger-group[data-open="true"] [aria-label="Topic"] .t-stagger-item:nth-child(-n + 3) {
+  transition-delay: 20ms;
+}
+.t-stagger-group[data-open="true"] [aria-label="Topic"] .t-stagger-item:nth-child(n + 4) {
+  transition-delay: 50ms;
+}
+
+/* Modifier for stagger items that should also pop in from a slight scale
+   as they settle — the topic buttons, deliberately not the title/hint row
+   above them, which stays a plain fade+rise. transform holds both
+   functions together (translateY + scale) so this fully overrides
+   .t-stagger-item's own transform value for elements carrying both
+   classes, rather than fighting it — same longhand, later rule wins. */
+.t-stagger-item--pop {
+  transform: translateY(6px) scale(0.97);
+}
+.t-stagger-group[data-open="true"] .t-stagger-item--pop {
+  transform: translateY(0) scale(1);
+}
+
+/* apple-design §14: reduced motion means gentler, not zero — keep a short
+   opacity cross-fade, drop the movement (translateY settle and the group
+   scale) entirely rather than snapping everything instantly, which is
+   what a blanket `transition: none` would do to the opacity too. */
+@media (prefers-reduced-motion: reduce) {
+  .t-stagger-group {
+    transition: none !important;
+    transform: none !important;
+  }
+  .t-stagger-item {
+    transition: opacity 120ms ease !important;
+    transform: none !important;
+  }
+}
+
 /* Hero progress bar fill — duration must match STEP_DURATION_MS in
    HeroCards.tsx so the fill lands exactly as the active card advances. */
 :root {
