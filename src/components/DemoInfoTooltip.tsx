@@ -29,7 +29,7 @@ export default function DemoInfoTooltip() {
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-label="Demo pages"
-        className="icon-symbol flex size-8 items-center justify-center rounded-full border border-[var(--ngen-grayscale-50)] bg-white text-base leading-none text-[var(--ngen-grayscale-500)] shadow-sm transition-colors hover:text-[var(--ngen-grayscale-900)]"
+        className="icon-symbol flex size-8 items-center justify-center rounded-full border border-[var(--color-gray-50)] bg-white text-base leading-none text-[var(--color-gray-500)] shadow-sm transition-colors hover:text-[var(--color-gray-900)]"
       >
         info
       </button>
@@ -37,9 +37,9 @@ export default function DemoInfoTooltip() {
       {open && (
         <div
           role="menu"
-          className="absolute right-0 top-10 w-56 rounded-xl border border-[var(--ngen-grayscale-50)] bg-white p-2 shadow-xl"
+          className="absolute right-0 top-10 w-56 rounded-xl border border-[var(--color-gray-50)] bg-white p-2 shadow-xl"
         >
-          <p className="eyebrow px-2 pb-1.5 pt-1 text-[10px] leading-none text-[var(--ngen-grayscale-500)]">
+          <p className="eyebrow px-2 pb-1.5 pt-1 text-[10px] leading-none text-[var(--color-gray-500)]">
             Demo pages
           </p>
           <div className="flex flex-col">
@@ -53,12 +53,12 @@ export default function DemoInfoTooltip() {
                   onClick={() => setOpen(false)}
                   className={`rounded-lg px-2 py-1.5 text-sm leading-[1.3] transition-colors ${
                     isActive
-                      ? "bg-[var(--ngen-grayscale-50)] font-medium text-[var(--ngen-grayscale-900)]"
-                      : "text-[var(--ngen-grayscale-500)] hover:bg-[var(--ngen-grayscale-50)] hover:text-[var(--ngen-grayscale-900)]"
+                      ? "bg-[var(--color-gray-50)] font-medium text-[var(--color-gray-900)]"
+                      : "text-[var(--color-gray-500)] hover:bg-[var(--color-gray-50)] hover:text-[var(--color-gray-900)]"
                   }`}
                 >
                   <span className="block">{route.label}</span>
-                  <span className="block text-xs text-[var(--ngen-grayscale-500)]">{route.path}</span>
+                  <span className="block text-xs text-[var(--color-gray-500)]">{route.path}</span>
                 </Link>
               );
             })}

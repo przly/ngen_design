@@ -13,7 +13,7 @@ export default function NavLinkDemo() {
         <NavLink text="Button" variant="dropdown" href="#" slowMotion={slowMotion} />
       </div>
 
-      <label className="flex select-none items-center gap-2 text-sm text-[var(--ngen-grayscale-500)]">
+      <label className="flex select-none items-center gap-2 text-sm text-[var(--color-gray-500)]">
         <input
           type="checkbox"
           checked={slowMotion}

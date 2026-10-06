@@ -142,15 +142,15 @@ export default function NavLink({
   const content = (
     <>
       <motion.span
-        className="absolute inset-0 -z-10 rounded-full bg-[var(--ngen-grayscale-50)]"
+        className="absolute inset-0 -z-10 rounded-full bg-[var(--color-gray-50)]"
         style={{ x: pillX }}
       />
-      <span className="whitespace-nowrap text-sm leading-[1.5] text-[var(--ngen-grayscale-500)]">
+      <span className="whitespace-nowrap text-sm leading-[1.5] text-[var(--color-gray-500)]">
         {text}
       </span>
       {isDropdown && (
         <motion.span
-          className="icon-symbol text-sm text-[var(--ngen-grayscale-500)]"
+          className="icon-symbol text-sm text-[var(--color-gray-500)]"
           style={{ rotate: chevronRotate }}
         >
           keyboard_arrow_down

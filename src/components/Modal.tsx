@@ -53,7 +53,7 @@ export default function Modal({ open, onClose, children }: ModalProps) {
       aria-hidden={!visible}
     >
       <div
-        className={`t-modal-backdrop absolute inset-0 bg-[var(--ngen-grayscale-900)]/40 ${
+        className={`t-modal-backdrop absolute inset-0 bg-[var(--color-gray-900)]/40 ${
           phase === "open" ? "is-open" : phase === "closing" ? "is-closing" : ""
         }`}
         onClick={onClose}

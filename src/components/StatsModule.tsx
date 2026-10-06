@@ -74,18 +74,18 @@ export default function StatsModule() {
             variants={rowVariants}
             className="flex w-full flex-col items-start gap-8"
           >
-            <div className="h-px w-full bg-[var(--ngen-grayscale-100)]" />
+            <div className="h-px w-full bg-[var(--color-gray-100)]" />
             <div className="flex w-full flex-col items-start gap-4">
-              <p className="eyebrow w-full text-xs leading-none text-[var(--ngen-grayscale-500)]">
+              <p className="eyebrow w-full text-xs leading-none text-[var(--color-gray-500)]">
                 {stat.label}
               </p>
               <p className="text-[60px] font-medium leading-none tracking-[-2.4px]">
                 {stat.prefix && (
-                  <span className="text-[var(--ngen-grayscale-500)]">
+                  <span className="text-[var(--color-gray-500)]">
                     {stat.prefix}
                   </span>
                 )}
-                <span className="text-[var(--ngen-grayscale-900)]">
+                <span className="text-[var(--color-gray-900)]">
                   <CountUp target={stat.value} />
                   {stat.suffix}
                 </span>

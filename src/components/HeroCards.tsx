@@ -87,7 +87,7 @@ export default function HeroCards() {
                     exit={{ opacity: 0, scale: prefersReducedMotion ? 1 : 0.8 }}
                     transition={switchTransition}
                     whileTap={{ scale: 0.97, transition: { duration: 0.1, ease: "easeOut" } }}
-                    className="flex size-7 shrink-0 items-center justify-center gap-1.5 rounded-full border border-[var(--ngen-green-400)] bg-[var(--ngen-green-600)] p-0 text-xs text-[var(--ngen-grayscale-900)] @[180px]:size-auto @[180px]:px-2.5 @[180px]:py-1.5"
+                    className="flex size-7 shrink-0 items-center justify-center gap-1.5 rounded-full border border-[var(--color-green-400)] bg-[var(--color-green-600)] p-0 text-xs text-[var(--color-gray-900)] @[180px]:size-auto @[180px]:px-2.5 @[180px]:py-1.5"
                   >
                     <span className="hidden leading-[1.5] @[180px]:inline">
                       Explore

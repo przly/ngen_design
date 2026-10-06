@@ -1,6 +1,14 @@
-import { useLayoutEffect, useState, type FormEvent } from "react";
+import { useLayoutEffect, useState, type CSSProperties, type FormEvent } from "react";
+import { useAnimationSpeed } from "../context/AnimationSpeedContext";
 
 type ContactType = "home" | "business" | "asset-owners";
+
+// Base values must match the --stagger-* fallbacks in index.css — divided
+// by the debug speed multiplier there (bottom-right SpeedControl; 0.1x =
+// ten times slower) so the stagger can be reviewed frame-by-frame.
+const STAGGER_BASE_DUR_MS = 120;
+const STAGGER_BASE_DELAY_ROW1_MS = 20;
+const STAGGER_BASE_DELAY_ROW2_MS = 50;
 
 const TYPE_OPTIONS: { value: ContactType; label: string }[] = [
   { value: "home", label: "For Home" },
@@ -38,7 +46,7 @@ function SelectorButton({ label, selected, onClick, className }: SelectorButtonP
       onClick={onClick}
       className={`flex items-center justify-center rounded-lg border-[0.5px] py-2.5 text-sm font-medium transition-transform duration-150 ease-out active:scale-[0.98] ${
         selected
-          ? "border-transparent bg-white text-[var(--ngen-grayscale-900)]"
+          ? "border-transparent bg-white text-[var(--color-gray-900)]"
           : "border-white/10 bg-white/10 text-white hover:bg-white/20"
       } ${className ?? ""}`}
     >
@@ -65,7 +73,7 @@ function FormField({ id, label, required, type = "text", value, onChange, placeh
     <div className={`flex w-full flex-1 flex-col items-start gap-2 ${className ?? ""}`}>
       <label htmlFor={id} className="flex items-start gap-1 text-xs leading-[1.5] text-white/50">
         {label}
-        {required && <span className="text-[#fb2c36]">*</span>}
+        {required && <span className="text-[var(--color-validation-failed)]">*</span>}
       </label>
       <input
         id={id}
@@ -82,6 +90,18 @@ function FormField({ id, label, required, type = "text", value, onChange, placeh
 }
 
 export default function ContactForm() {
+  const speed = useAnimationSpeed();
+  // CSS custom properties, not inline transition durations directly —
+  // index.css's .t-stagger-group/.t-stagger-item already reference these
+  // by name, so overriding them here reaches every rule that uses them
+  // (including the two row-delay rules) without duplicating any of that
+  // CSS. Defaults to 1 outside a provider (see AnimationSpeedContext), so
+  // this is a no-op divide-by-1 on every other page.
+  const staggerSpeedStyle: CSSProperties = {
+    "--stagger-dur": `${STAGGER_BASE_DUR_MS / speed}ms`,
+    "--stagger-delay-row1": `${STAGGER_BASE_DELAY_ROW1_MS / speed}ms`,
+    "--stagger-delay-row2": `${STAGGER_BASE_DELAY_ROW2_MS / speed}ms`,
+  } as CSSProperties;
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
@@ -174,7 +194,8 @@ export default function ContactForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex w-full max-w-[714px] flex-col items-start gap-9 bg-[var(--ngen-grayscale-900)] p-6"
+      style={staggerSpeedStyle}
+      className="flex w-full max-w-[714px] flex-col items-start gap-9 bg-[var(--color-gray-900)] p-6"
     >
       <div className="flex w-full flex-col items-start gap-12">
         <div className="flex w-full flex-col items-start gap-6">
@@ -232,7 +253,7 @@ export default function ContactForm() {
         <div className="flex w-full flex-col items-start gap-2">
           <div className="flex items-start gap-1 text-xs leading-[1.5] text-white/50">
             <span>Select the type:</span>
-            <span className="text-[#fb2c36]">*</span>
+            <span className="text-[var(--color-validation-failed)]">*</span>
           </div>
           <div className="flex w-full flex-col gap-2.5 sm:flex-row sm:items-center" role="group" aria-label="Contact type">
             {TYPE_OPTIONS.map((option) => (
@@ -272,7 +293,7 @@ export default function ContactForm() {
                   <div className="t-stagger-item flex w-full flex-col items-start gap-1 text-xs leading-[1.5] text-white/50 sm:flex-row sm:items-start sm:justify-between sm:gap-2">
                     <div className="flex items-start gap-1">
                       <span>Select a topic:</span>
-                      <span className="text-[#fb2c36]">*</span>
+                      <span className="text-[var(--color-validation-failed)]">*</span>
                     </div>
                     <span>You can select multiple options</span>
                   </div>
@@ -302,7 +323,7 @@ export default function ContactForm() {
         <div className="flex w-full flex-col items-start gap-2">
           <label htmlFor="message" className="flex items-start gap-1 text-xs leading-[1.5] text-white/50">
             Message
-            <span className="text-[#fb2c36]">*</span>
+            <span className="text-[var(--color-validation-failed)]">*</span>
           </label>
           <textarea
             id="message"
@@ -325,8 +346,8 @@ export default function ContactForm() {
             className="sr-only"
           />
           <span
-            className={`icon-symbol flex size-[18px] shrink-0 items-center justify-center rounded border-[0.5px] text-[14px] leading-none text-[var(--ngen-grayscale-900)] transition-colors duration-150 ${
-              agreed ? "border-[var(--ngen-green-400)] bg-[var(--ngen-green-600)]" : "border-white/10 bg-white/10"
+            className={`icon-symbol flex size-[18px] shrink-0 items-center justify-center rounded border-[0.5px] text-[14px] leading-none text-[var(--color-gray-900)] transition-colors duration-150 ${
+              agreed ? "border-[var(--color-green-400)] bg-[var(--color-green-600)]" : "border-white/10 bg-white/10"
             }`}
           >
             {agreed ? "check" : ""}
@@ -339,7 +360,7 @@ export default function ContactForm() {
         <button
           type="submit"
           disabled={!canSubmit}
-          className="flex w-full items-center justify-center gap-2 rounded-full border border-[var(--ngen-green-400)] bg-[var(--ngen-green-600)] px-4 py-3 text-sm font-medium text-[var(--ngen-grayscale-900)] transition-transform duration-150 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex w-full items-center justify-center gap-2 rounded-full border border-[var(--color-green-400)] bg-[var(--color-green-600)] px-4 py-3 text-sm font-medium text-[var(--color-gray-900)] transition-transform duration-150 ease-out active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
         >
           Send Message
           <span className="icon-symbol text-sm leading-none">arrow_forward</span>
@@ -349,7 +370,7 @@ export default function ContactForm() {
             NewsletterSignup's error banner, for the post-submit confirmation. */}
         <div className="t-acc w-full" data-open={submitted}>
           <div className="t-acc-panel">
-            <div className="t-acc-panel-inner text-xs leading-[1.5] text-[var(--ngen-green-400)]">
+            <div className="t-acc-panel-inner text-xs leading-[1.5] text-[var(--color-green-400)]">
               Thanks — your message has been sent.
             </div>
           </div>
