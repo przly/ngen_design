@@ -14,4 +14,6 @@ export const DEMO_ROUTES: DemoRoute[] = [
   { path: "/modal-demo", label: "Modal" },
   { path: "/hero-cards", label: "Hero cards" },
   { path: "/contact-form", label: "Contact form" },
+  { path: "/segmented-control", label: "Segmented control" },
+  { path: "/product-diagram", label: "Product diagram" },
 ];
