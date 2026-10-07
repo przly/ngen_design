@@ -1,0 +1,56 @@
+@import 'tailwindcss';
+
+@theme {
+	/* Font families */
+	--font-primary: 'Inter Variable', sans-serif;
+	--font-secondary: 'Geist Mono', monospace;
+
+	/* Colors */
+	--color-white: oklch(1 0 0);
+	--color-black: oklch(0 0 0);
+
+	--color-gray-10: oklch(0.93 0.0035 247.86);
+	--color-gray-50: oklch(0.9719 0.0025 228.78);
+	--color-gray-100: oklch(0.9349 0.0059 239.82);
+	--color-gray-200: oklch(0.8575 0.0096 242.86);
+	--color-gray-300: oklch(0.7745 0.0142 241.01);
+	--color-gray-400: oklch(0.6897 0.0172 239.23);
+	--color-gray-500: oklch(0.6145 0.0169 241.93);
+	--color-gray-600: oklch(0.5212 0.0215 243.26);
+	--color-gray-700: oklch(0.4267 0.0275 242.47);
+	--color-gray-800: oklch(0.3304 0.0391 242.21);
+	--color-gray-900: oklch(0.2168 0.0436 240.97);
+	--color-gray-950: oklch(0.1554 0.0269 234.59);
+
+	--color-green-50: oklch(0.9783 0.0223 141.24);
+	--color-green-100: oklch(0.9551 0.0431 141.02);
+	--color-green-200: oklch(0.9136 0.0887 141.49);
+	--color-green-300: oklch(0.8677 0.137 141.02);
+	--color-green-400: oklch(0.833 0.1775 140.94);
+	--color-green-500: oklch(0.7994 0.2106 140.96);
+	--color-green-600: oklch(0.769 0.2358 141.24);
+	--color-green-700: oklch(0.6254 0.1909 141.26);
+	--color-green-800: oklch(0.4646 0.1385 141.18);
+	--color-green-900: oklch(0.3018 0.0841 141.16);
+	--color-green-950: oklch(0.1956 0.0473 140.22);
+
+	--color-validation-failed: oklch(0.628 0.2577 29.23);
+	--color-border: oklch(0.2211 0.0455 249.47);
+	--color-success: oklch(0.6401 0.1751 146.74);
+	--color-danger: oklch(0.5401 0.1978 22.84);
+	--color-warning: oklch(0.8442 0.172159 84.9338);
+	--color-info: oklch(0.6552 0.1105 212.17);
+	--color-focus: oklch(0.6746 0.1414 261.34);
+
+	--ease-ease: cubic-bezier(0.23, 1, 0.32, 1);
+	--ease-ease-in-out: cubic-bezier(0.55, 0, 0.45, 1);
+	--ease-slow-down: cubic-bezier(0.25, 0.49, 0.31, 1);
+	--ease-long-slow-down: cubic-bezier(0.13, 0.63, 0.4, 0.97);
+	--ease-ease-motion: cubic-bezier(0.66, 0.19, 0.29, 0.79);
+	--ease-expressive-in-out: cubic-bezier(0.76, 0.09, 0.03, 0.96);
+	--ease-fly-in: cubic-bezier(0.08, 0.69, 0.07, 1);
+	--ease-fly-out: cubic-bezier(0.54, 0.01, 0.99, 0.26);
+
+	--tracking-tight: -0.02em;
+	--leading-tight: 1.2;
+}

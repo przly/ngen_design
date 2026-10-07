@@ -1,0 +1,121 @@
+@import 'tailwindcss' reference;
+
+@layer components {
+	.editor-text {
+		strong {
+			@apply text-black;
+		}
+
+		:is(h1, h2, h3, h4, h5, h6) {
+			@apply mt-20 mb-4 text-black lg:mb-4.5;
+
+			.tab-content &,
+			.app-guide-text & {
+				@apply mb-3 2xl:mt-20;
+			}
+
+			&:first-child {
+				@apply mt-0;
+			}
+		}
+
+		:is(p, img, table) {
+			@apply mt-4 lg:mt-6;
+
+			.app-guide-text &,
+			.tab-content & {
+				@apply mt-3;
+			}
+
+			&:first-child {
+				@apply mt-0;
+			}
+		}
+
+		img {
+			&.alignleft,
+			&.alignright,
+			&.aligncenter {
+				@apply block;
+			}
+
+			&.alignleft {
+				@apply mr-auto;
+			}
+
+			&.alignright {
+				@apply ml-auto;
+			}
+
+			&.aligncenter {
+				@apply mx-auto;
+			}
+		}
+
+		ul {
+			@apply mt-4 flex flex-col gap-3;
+
+			.app-guide-text &,
+			.tab-content & {
+				@apply mt-3;
+			}
+
+			&:first-child {
+				@apply mt-0;
+			}
+
+			li {
+				@apply relative pl-6;
+
+				&:before {
+					@apply absolute top-2 left-1.5 size-1.5 rounded-full bg-black content-[''];
+				}
+			}
+		}
+
+		a {
+			@apply text-black hover:underline;
+		}
+
+		table {
+			@apply w-full border-collapse text-left;
+		}
+
+		:is(th, td) {
+			@apply border-b border-gray-100 py-3 align-top;
+
+			&:not(:last-child) {
+				@apply pr-3;
+			}
+		}
+
+		th {
+			@apply text-xs font-semibold text-gray-900 uppercase;
+			font-family: var(--font-secondary);
+		}
+
+		td {
+			@apply text-sm text-gray-500;
+
+			strong {
+				@apply font-medium text-gray-900;
+			}
+		}
+
+		&.check-list {
+			ul {
+				@apply gap-0;
+
+				li {
+					@apply border-b border-gray-200 py-3 text-sm first:border-t first:border-t-gray-200;
+
+					&:before {
+						@apply top-1/2 left-0 size-3 translate-y-[-50%] rounded-none bg-black content-[''];
+						background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='5' fill='none'%3E%3Cpath fill='%2344d62c' d='M2.238 3.875 5.975.138A.43.43 0 0 1 6.288 0q.187 0 .324.138.138.137.138.325a.43.43 0 0 1-.138.312l-4.05 4.063a.44.44 0 0 1-.324.137.43.43 0 0 1-.313-.137L.138 3.05A.43.43 0 0 1 0 2.738q0-.188.138-.325a.43.43 0 0 1 .312-.138q.187 0 .325.138z'/%3E%3C/svg%3E")
+							no-repeat center / 10px;
+					}
+				}
+			}
+		}
+	}
+}

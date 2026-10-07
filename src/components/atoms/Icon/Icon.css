@@ -1,0 +1,5 @@
+.icon svg,
+.icon svg path,
+.icon rect {
+	fill: currentColor;
+}

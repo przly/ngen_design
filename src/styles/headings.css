@@ -1,0 +1,59 @@
+.editor-text :is(h1, h2, h3, h4, h5, h6),
+.heading {
+	@apply leading-none font-medium text-gray-500 [&_strong]:text-gray-900 [&>u]:decoration-1 lg:[&>u]:decoration-2 [.theme-dark_&_strong]:text-white;
+}
+
+.editor-text h1,
+.heading-1 {
+	@apply text-4xl tracking-tight lg:text-5xl lg:tracking-[-0.04em] xl:text-6xl 2xl:text-7xl;
+}
+
+.editor-text h2,
+.heading-2 {
+	@apply text-3xl tracking-[-0.03em] md:text-4xl lg:text-5xl xl:text-6xl;
+}
+
+.editor-text h3,
+.heading-3 {
+	@apply text-3xl leading-none tracking-[-0.03em] lg:text-4xl xl:text-5xl;
+}
+
+.editor-text h4,
+.heading-4 {
+	@apply text-xl tracking-tight md:text-2xl lg:text-3xl xl:text-4xl;
+}
+
+.editor-text h5,
+.heading-5 {
+	@apply text-lg leading-tight tracking-tight sm:text-xl xl:text-2xl;
+}
+
+.editor-text h6,
+.heading-6 {
+	@apply text-base tracking-tight md:text-lg;
+}
+
+.super-title {
+	@apply font-secondary text-xs leading-none font-semibold tracking-tight text-gray-500 uppercase;
+}
+
+.page-text h2,
+.page-text h3,
+.page-text h4,
+.page-text h5 {
+	@apply text-2xl leading-tight tracking-tight text-gray-900;
+}
+
+.tab-content h2,
+.tab-content h3,
+.tab-content h4,
+.tab-content h5 {
+	@apply text-xl leading-tight tracking-tight text-gray-900;
+}
+
+.app-guide-text h2,
+.app-guide-text h3,
+.app-guide-text h4,
+.app-guide-text h5 {
+	@apply text-xl leading-tight tracking-tight text-gray-900;
+}

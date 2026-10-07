@@ -1,0 +1,37 @@
+@layer base {
+	/* Critical fonts - loaded immediately with font-display: swap */
+	@font-face {
+		font-family: 'Inter Variable';
+		font-style: normal;
+		font-weight: 100 900;
+		font-display: swap;
+		src: url('~frontend-font/InterVariable.woff2') format('woff2');
+	}
+	@font-face {
+		font-family: 'Inter Variable';
+		font-style: italic;
+		font-weight: 100 900;
+		font-display: swap;
+		src: url('~frontend-font/InterVariable-Italic.woff2') format('woff2');
+	}
+
+	@font-face {
+		font-family: 'Geist Mono';
+		src: url('~frontend-font/GeistMono-Medium.woff2') format('woff2');
+		font-weight: 400 500;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	@font-face {
+		font-family: 'Geist Mono';
+		src: url('~frontend-font/GeistMono-SemiBold.woff2') format('woff2');
+		font-weight: 600;
+		font-style: normal;
+		font-display: swap;
+	}
+}
+
+/* Non-critical fonts - lazy loaded */
+@layer utilities {
+}

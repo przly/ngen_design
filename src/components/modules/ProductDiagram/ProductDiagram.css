@@ -1,0 +1,27 @@
+@import 'tailwindcss' reference;
+
+@layer components {
+	/* White pulses travel along each connector, tail to arrowhead. Only transforms animate. */
+	.diagram-flow {
+		@apply absolute h-0.5 origin-left overflow-hidden;
+		--flow-pulse: 80px;
+	}
+
+	.diagram-flow-pulses {
+		@apply absolute inset-y-0 right-0 opacity-80 motion-reduce:hidden;
+		left: calc(var(--flow-period) * -1);
+		background: repeating-linear-gradient(
+			90deg,
+			transparent 0,
+			transparent calc(var(--flow-period) - var(--flow-pulse)),
+			var(--color-white) var(--flow-period)
+		);
+		animation: diagram-flow var(--flow-duration) linear var(--flow-delay) infinite;
+	}
+
+	@keyframes diagram-flow {
+		to {
+			transform: translateX(var(--flow-period));
+		}
+	}
+}

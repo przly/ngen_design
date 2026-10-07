@@ -1,0 +1,109 @@
+.grid-stack {
+	display: grid;
+	grid-template-areas: 'stack';
+}
+
+.grid-stack-item {
+	grid-area: stack;
+}
+
+/* Honeypot fake selector, leave as is */
+.contact-reason-input-2 {
+	display: none;
+}
+
+strong {
+	@apply font-medium;
+}
+
+.container-large {
+	@apply px-5 lg:px-2.5 xl:px-6;
+}
+
+@utility border-green-gradient {
+	border: 1px solid transparent;
+	background-image:
+		linear-gradient(var(--color-green-600), var(--color-green-600)),
+		linear-gradient(to bottom, var(--color-green-400), var(--color-green-500));
+	background-clip: padding-box, border-box;
+	background-origin: border-box;
+}
+
+@utility green-gradient-hover {
+	&:hover,
+	[data-clickable-card]:hover &,
+	[data-clickable-card]:focus-within & {
+		background-image:
+			linear-gradient(var(--color-green-500), var(--color-green-500)),
+			linear-gradient(to bottom, var(--color-green-300), var(--color-green-400));
+	}
+}
+
+@utility border-gray-gradient {
+	border: 1px solid transparent;
+	background-image:
+		linear-gradient(var(--color-gray-900), var(--color-gray-900)), linear-gradient(to bottom, var(--color-gray-700), var(--color-gray-800));
+	background-clip: padding-box, border-box;
+	background-origin: border-box;
+}
+
+@utility gray-gradient-hover {
+	&:hover,
+	[data-clickable-card]:hover &,
+	[data-clickable-card]:focus-within & {
+		background-image:
+			linear-gradient(var(--color-gray-800), var(--color-gray-800)),
+			linear-gradient(to bottom, var(--color-gray-600), var(--color-gray-700));
+	}
+}
+
+@utility border-transparent-gradient {
+	border: 1px solid transparent;
+	background-image:
+		linear-gradient(color-mix(in oklch, var(--color-white) 10%, transparent), color-mix(in oklch, var(--color-white) 10%, transparent)),
+		linear-gradient(
+			to bottom,
+			color-mix(in oklch, var(--color-white) 20%, transparent),
+			color-mix(in oklch, var(--color-white) 10%, transparent)
+		);
+	background-clip: padding-box, border-box;
+	background-origin: border-box;
+}
+
+@utility transparent-gradient-hover {
+	&:hover {
+		background-image:
+			linear-gradient(color-mix(in oklch, var(--color-white) 20%, transparent), color-mix(in oklch, var(--color-white) 20%, transparent)),
+			linear-gradient(
+				to bottom,
+				color-mix(in oklch, var(--color-white) 20%, transparent),
+				color-mix(in oklch, var(--color-white) 10%, transparent)
+			);
+	}
+}
+
+@utility border-white-gradient {
+	border: 1px solid transparent;
+	background-image:
+		linear-gradient(var(--color-white), var(--color-white)), linear-gradient(to bottom, var(--color-gray-50), var(--color-gray-100));
+	background-clip: padding-box, border-box;
+	background-origin: border-box;
+}
+
+@utility white-gradient-hover {
+	&:hover,
+	[data-clickable-card]:hover &,
+	[data-clickable-card]:focus-within & {
+		background-image:
+			linear-gradient(var(--color-gray-50), var(--color-gray-50)), linear-gradient(to bottom, var(--color-gray-100), var(--color-gray-200));
+	}
+}
+
+@utility bg-btn-white-hover {
+	background-image:
+		linear-gradient(var(--color-gray-50), var(--color-gray-50)), linear-gradient(to bottom, var(--color-gray-100), var(--color-gray-200));
+}
+
+@utility bg-benefits-image-gradient {
+	background-image: linear-gradient(270deg, transparent 50%, color-mix(in oklch, var(--color-gray-900) 50%, transparent) 100%);
+}
