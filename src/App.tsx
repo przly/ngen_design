@@ -8,6 +8,7 @@ import HeroCardsDemo from "./pages/HeroCardsDemo";
 import ContactFormDemo from "./pages/ContactFormDemo";
 import SegmentedControlDemo from "./pages/SegmentedControlDemo";
 import ProductDiagramDemo from "./pages/ProductDiagramDemo";
+import BatteryStackBuilderDemo from "./pages/BatteryStackBuilderDemo";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
       <Route path="/contact-form" element={<ContactFormDemo />} />
       <Route path="/segmented-control" element={<SegmentedControlDemo />} />
       <Route path="/product-diagram" element={<ProductDiagramDemo />} />
+      <Route path="/battery-stack-builder" element={<BatteryStackBuilderDemo />} />
     </Routes>
   );
 }

@@ -34,6 +34,7 @@ import DirectionsCar from './assets/DirectionsCar.svg';
 import Docs from './assets/Docs.svg';
 import Document from './assets/Document.svg';
 import Download from './assets/Download.svg';
+import DragIndicator from './assets/DragIndicator.svg';
 import ElectricalServices from './assets/ElectricalServices.svg';
 import Email from './assets/Email.svg';
 import Energy from './assets/Energy.svg';
@@ -110,6 +111,7 @@ export const icons: Record<string, string> = {
 	Docs,
 	Document,
 	Download,
+	DragIndicator,
 	ElectricalServices,
 	Email,
 	Energy,
